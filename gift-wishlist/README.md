@@ -2,6 +2,16 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Environment Variables
+
+Configure the API endpoint in a `.env` file at the project root:
+
+```
+REACT_APP_API_URL=http://localhost:3001
+```
+
+Adjust the value to point at your backend server.
+
 ## Available Scripts
 
 In the project directory, you can run:
