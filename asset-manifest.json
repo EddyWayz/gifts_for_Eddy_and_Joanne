@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/gifts_for_Eddy_and_Joanne/static/css/main.a136678f.css",
-    "main.js": "/gifts_for_Eddy_and_Joanne/static/js/main.7df218f5.js",
+    "main.css": "/gifts_for_Eddy_and_Joanne/static/css/main.57a0337d.css",
+    "main.js": "/gifts_for_Eddy_and_Joanne/static/js/main.14cfa83f.js",
     "static/js/453.e5383404.chunk.js": "/gifts_for_Eddy_and_Joanne/static/js/453.e5383404.chunk.js",
     "index.html": "/gifts_for_Eddy_and_Joanne/index.html",
-    "main.a136678f.css.map": "/gifts_for_Eddy_and_Joanne/static/css/main.a136678f.css.map",
-    "main.7df218f5.js.map": "/gifts_for_Eddy_and_Joanne/static/js/main.7df218f5.js.map",
+    "main.57a0337d.css.map": "/gifts_for_Eddy_and_Joanne/static/css/main.57a0337d.css.map",
+    "main.14cfa83f.js.map": "/gifts_for_Eddy_and_Joanne/static/js/main.14cfa83f.js.map",
     "453.e5383404.chunk.js.map": "/gifts_for_Eddy_and_Joanne/static/js/453.e5383404.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.a136678f.css",
-    "static/js/main.7df218f5.js"
+    "static/css/main.57a0337d.css",
+    "static/js/main.14cfa83f.js"
   ]
 }
