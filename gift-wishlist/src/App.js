@@ -17,9 +17,20 @@ function App() {
 
 
   useEffect(() => {
-    fetch(`${API_URL}/api/gifts`)
-      .then(res => res.json())
-      .then(data => setGifts(data));
+
+    fetch('http://localhost:3001/api/gifts')
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return res.json();
+      })
+      .then(data => setGifts(data))
+      .catch(err => {
+        console.error('Error fetching gifts:', err);
+        alert('Die Geschenke konnten nicht geladen werden. Bitte versuche es später erneut.');
+      });
+
   }, []);
 
   const handleReserve = (id) => {
@@ -32,9 +43,18 @@ function App() {
         },
         body: JSON.stringify({ name }),
       })
-        .then(res => res.json())
+        .then(res => {
+          if (!res.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return res.json();
+        })
         .then(updatedGift => {
           setGifts(gifts.map(g => g.id === id ? updatedGift : g));
+        })
+        .catch(err => {
+          console.error('Error reserving gift:', err);
+          alert('Das Geschenk konnte nicht reserviert werden. Bitte versuche es später erneut.');
         });
     }
   };
@@ -49,7 +69,8 @@ function App() {
       price: parseFloat(newGiftPrice),
       recipient: newGiftRecipient,
     };
-    fetch(`${API_URL}/api/gifts`, {
+
+    fetch('http://localhost:3001/api/gifts', {
 
       method: 'POST',
       headers: {
@@ -57,15 +78,25 @@ function App() {
       },
       body: JSON.stringify(newGift),
     })
-    .then(() => {
-      setSuggestionMessage('Danke für deinen Vorschlag!');
-      setNewGiftName('');
-      setNewGiftDescription('');
-      setNewGiftLink('');
-      setNewGiftImageUrl('');
-      setNewGiftPrice('');
-      setNewGiftRecipient('eddy');
-    });
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Network response was not ok');
+        }
+        return res;
+      })
+      .then(() => {
+        setSuggestionMessage('Danke für deinen Vorschlag!');
+        setNewGiftName('');
+        setNewGiftDescription('');
+        setNewGiftLink('');
+        setNewGiftImageUrl('');
+        setNewGiftPrice('');
+        setNewGiftRecipient('eddy');
+      })
+      .catch(err => {
+        console.error('Error suggesting gift:', err);
+        setSuggestionMessage('Beim Vorschlagen des Geschenks ist ein Fehler aufgetreten.');
+      });
 
   };
 
