@@ -2,6 +2,7 @@
   "name": "gift-wishlist",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://EddyWayz.github.io/gifts_for_Eddy_and_Joanne/",
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.8.0",
