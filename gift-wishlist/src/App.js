@@ -69,6 +69,12 @@ function App() {
 
   const filteredGifts = gifts.filter(gift => {
     if (recipientFilter === 'all') return true;
+    if (recipientFilter === 'eddy') {
+      return gift.recipient === 'eddy' || gift.recipient === 'both';
+    }
+    if (recipientFilter === 'joanne') {
+      return gift.recipient === 'joanne' || gift.recipient === 'both';
+    }
     return gift.recipient === recipientFilter;
   });
 
