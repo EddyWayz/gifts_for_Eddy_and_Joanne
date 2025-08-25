@@ -8,7 +8,7 @@ function App() {
   const [newGiftLink, setNewGiftLink] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:3001/api/gifts')
+    fetch('https://backend-gifts-for-eddy-and-joanne.onrender.com/api/gifts')
       .then(res => res.json())
       .then(data => setGifts(data));
   }, []);
@@ -16,7 +16,7 @@ function App() {
   const handleReserve = (id) => {
     const name = prompt('Bitte gib deinen Namen ein, um das Geschenk zu reservieren:');
     if (name) {
-      fetch(`http://localhost:3001/api/gifts/${id}/reserve`, {
+      fetch(`https://backend-gifts-for-eddy-and-joanne.onrender.com/api/gifts/${id}/reserve`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -33,7 +33,7 @@ function App() {
   const handleAddGift = (e) => {
     e.preventDefault();
     const newGift = { name: newGiftName, description: newGiftDescription, link: newGiftLink };
-    fetch('http://localhost:3001/api/gifts', {
+    fetch('https://backend-gifts-for-eddy-and-joanne.onrender.com/api/gifts', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
