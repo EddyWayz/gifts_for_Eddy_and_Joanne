@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
+const API_URL = process.env.REACT_APP_API_URL;
+
 function App() {
   const [gifts, setGifts] = useState([]);
   const [newGiftName, setNewGiftName] = useState('');
@@ -15,6 +17,7 @@ function App() {
 
 
   useEffect(() => {
+
     fetch('http://localhost:3001/api/gifts')
       .then(res => {
         if (!res.ok) {
@@ -27,12 +30,13 @@ function App() {
         console.error('Error fetching gifts:', err);
         alert('Die Geschenke konnten nicht geladen werden. Bitte versuche es später erneut.');
       });
+
   }, []);
 
   const handleReserve = (id) => {
     const name = prompt('Bitte gib deinen Namen ein, um das Geschenk zu reservieren:');
     if (name) {
-      fetch(`http://localhost:3001/api/gifts/${id}/reserve`, {
+      fetch(`${API_URL}/api/gifts/${id}/reserve`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -65,7 +69,9 @@ function App() {
       price: parseFloat(newGiftPrice),
       recipient: newGiftRecipient,
     };
+
     fetch('http://localhost:3001/api/gifts', {
+
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
