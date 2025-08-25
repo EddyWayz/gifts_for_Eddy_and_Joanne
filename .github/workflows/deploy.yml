@@ -17,11 +17,25 @@ jobs:
         with:
           node-version: '18'
 
-      - name: Install Dependencies and Build
-        run: |
-          cd gift-wishlist
-          npm install
-          npm run build
+      - name: Cache npm modules
+        uses: actions/cache@v3
+        with:
+          path: gift-wishlist/node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('gift-wishlist/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install Dependencies
+        working-directory: gift-wishlist
+        run: npm install
+
+      - name: Run Tests
+        working-directory: gift-wishlist
+        run: npm test
+
+      - name: Build
+        working-directory: gift-wishlist
+        run: npm run build
         env:
           CI: false
 

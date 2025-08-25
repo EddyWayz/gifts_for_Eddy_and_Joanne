@@ -1,7 +1,7 @@
 
 const express = require('express');
 const cors = require('cors');
-const fs = require('fs');
+const fs = require('fs').promises;
 const path = require('path');
 
 const app = express();
@@ -24,27 +24,25 @@ const notifyAdmin = (suggestion) => {
 };
 
 // Endpoint to get all gifts
-app.get('/api/gifts', (req, res) => {
-  fs.readFile(giftsFilePath, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('An error occurred while reading the gifts file.');
-    }
+app.get('/api/gifts', async (req, res) => {
+  try {
+    const data = await fs.readFile(giftsFilePath, 'utf8');
     res.json(JSON.parse(data));
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('An error occurred while reading the gifts file.');
+  }
 });
 
 // Endpoint to reserve a gift
+
 app.post('/api/gifts/:id/reserve', validateReservation, (req, res) => {
+
   const giftId = parseInt(req.params.id, 10);
   const { name } = req.body;
 
-  fs.readFile(giftsFilePath, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('An error occurred while reading the gifts file.');
-    }
-
+  try {
+    const data = await fs.readFile(giftsFilePath, 'utf8');
     let gifts = JSON.parse(data);
     const giftIndex = gifts.findIndex(g => g.id === giftId);
 
@@ -58,26 +56,23 @@ app.post('/api/gifts/:id/reserve', validateReservation, (req, res) => {
 
     gifts[giftIndex].reservedBy = name;
 
-    fs.writeFile(giftsFilePath, JSON.stringify(gifts, null, 2), (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send('An error occurred while saving the gifts file.');
-      }
-      res.json(gifts[giftIndex]);
-    });
-  });
+    await fs.writeFile(giftsFilePath, JSON.stringify(gifts, null, 2));
+    res.json(gifts[giftIndex]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('An error occurred while processing the request.');
+  }
 });
 
 // Endpoint to add a new gift
+
 app.post('/api/gifts', validateGift, (req, res) => {
+
+
   const { name, description, link, imageUrl, price, recipient } = req.body;
 
-  fs.readFile(giftsFilePath, 'utf8', (err, data) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).send('An error occurred while reading the gifts file.');
-    }
-
+  try {
+    const data = await fs.readFile(giftsFilePath, 'utf8');
     let gifts = JSON.parse(data);
     const newGift = {
       id: gifts.length > 0 ? Math.max(...gifts.map(g => g.id)) + 1 : 1,
@@ -91,50 +86,50 @@ app.post('/api/gifts', validateGift, (req, res) => {
     };
 
     gifts.push(newGift);
-
-    fs.writeFile(giftsFilePath, JSON.stringify(gifts, null, 2), (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send('An error occurred while saving the gifts file.');
-      }
-      res.status(201).json(newGift);
-    });
-  });
+    await fs.writeFile(giftsFilePath, JSON.stringify(gifts, null, 2));
+    res.status(201).json(newGift);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('An error occurred while processing the gifts file.');
+  }
 });
 
 // Endpoint to suggest a new gift
+
 app.post('/api/suggestions', validateSuggestion, (req, res) => {
+
   const { name, description, link, imageUrl, price } = req.body;
 
-  fs.readFile(suggestionsFilePath, 'utf8', (err, data) => {
-    let suggestions = [];
-    if (!err) {
-      suggestions = JSON.parse(data);
-    } else if (err.code !== 'ENOENT') {
+  let suggestions = [];
+  try {
+    const data = await fs.readFile(suggestionsFilePath, 'utf8');
+    suggestions = JSON.parse(data);
+  } catch (err) {
+    if (err.code !== 'ENOENT') {
       console.error(err);
       return res.status(500).send('An error occurred while reading the suggestions file.');
     }
+  }
 
-    const newSuggestion = {
-      id: suggestions.length > 0 ? Math.max(...suggestions.map(s => s.id)) + 1 : 1,
-      name,
-      description,
-      link,
-      imageUrl,
-      price
-    };
+  const newSuggestion = {
+    id: suggestions.length > 0 ? Math.max(...suggestions.map(s => s.id)) + 1 : 1,
+    name,
+    description,
+    link,
+    imageUrl,
+    price
+  };
 
-    suggestions.push(newSuggestion);
+  suggestions.push(newSuggestion);
 
-    fs.writeFile(suggestionsFilePath, JSON.stringify(suggestions, null, 2), (err) => {
-      if (err) {
-        console.error(err);
-        return res.status(500).send('An error occurred while saving the suggestions file.');
-      }
-      notifyAdmin(newSuggestion);
-      res.status(202).json({ message: 'Suggestion received' });
-    });
-  });
+  try {
+    await fs.writeFile(suggestionsFilePath, JSON.stringify(suggestions, null, 2));
+    notifyAdmin(newSuggestion);
+    res.status(202).json({ message: 'Suggestion received' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('An error occurred while saving the suggestions file.');
+  }
 });
 
 app.listen(PORT, () => {
