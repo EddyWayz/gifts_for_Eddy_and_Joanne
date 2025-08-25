@@ -1,0 +1,23 @@
+[
+  {
+    "id": 1,
+    "name": "Ein gutes Buch",
+    "description": "Ein spannender Krimi oder ein interessantes Sachbuch.",
+    "link": "https://www.amazon.de/bücher",
+    "reservedBy": "Eduard"
+  },
+  {
+    "id": 2,
+    "name": "Kopfhörer",
+    "description": "Noise-Cancelling-Kopfhörer für ungestörten Musikgenuss.",
+    "link": "https://www.bose.de/",
+    "reservedBy": "Joanne"
+  },
+  {
+    "id": 3,
+    "name": "Ein Gutschein für ein gemeinsames Abendessen",
+    "description": "Einlösbar in unserem Lieblingsrestaurant.",
+    "link": null,
+    "reservedBy": null
+  }
+]
