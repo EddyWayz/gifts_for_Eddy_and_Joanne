@@ -78,6 +78,37 @@ body {
   gap: 30px;
 }
 
+.filter-controls,
+.sort-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+.filter-controls button,
+.sort-controls button {
+  background-color: #C8A97E;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.filter-controls button.active,
+.sort-controls button.active {
+  background-color: #3D405B;
+}
+
+.filter-controls button:hover,
+.sort-controls button:hover {
+  background-color: #b89a74;
+  transform: scale(1.03);
+}
+
 .gift-card {
   background: var(--color-card-bg);
   border: 1px solid #EAEAEA;
@@ -112,6 +143,11 @@ body {
 .gift-card p {
     flex-grow: 1;
     margin-bottom: 20px;
+}
+
+.recipient {
+  font-style: italic;
+  margin-bottom: 10px;
 }
 
 .gift-card a {
@@ -180,7 +216,8 @@ body {
 }
 
 .add-gift-form input,
-.add-gift-form textarea {
+.add-gift-form textarea,
+.add-gift-form select {
   padding: 12px;
   border: 1px solid #EAEAEA;
   border-radius: 8px;
@@ -189,7 +226,8 @@ body {
 }
 
 .add-gift-form input:focus,
-.add-gift-form textarea:focus {
+.add-gift-form textarea:focus,
+.add-gift-form select:focus {
     outline: none;
     border-color: var(--color-accent);
     box-shadow: 0 0 0 2px rgba(200, 169, 126, 0.2);
@@ -211,6 +249,7 @@ body {
   background-color: #2c2f42;
 }
 
+
 @media (max-width: 600px) {
   .gift-list {
     grid-template-columns: 1fr;
@@ -220,4 +259,3 @@ body {
     font-size: 2rem;
   }
 }
-

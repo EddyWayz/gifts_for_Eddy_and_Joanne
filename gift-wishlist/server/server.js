@@ -64,7 +64,7 @@ app.post('/api/gifts/:id/reserve', (req, res) => {
 
 // Endpoint to add a new gift
 app.post('/api/gifts', (req, res) => {
-  const { name, description, link, imageUrl, price } = req.body;
+  const { name, description, link, imageUrl, price, recipient } = req.body;
 
   fs.readFile(giftsFilePath, 'utf8', (err, data) => {
     if (err) {
@@ -80,6 +80,7 @@ app.post('/api/gifts', (req, res) => {
       link,
       imageUrl,
       price,
+      recipient,
       reservedBy: null
     };
 
