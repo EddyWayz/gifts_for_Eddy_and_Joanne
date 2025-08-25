@@ -9,6 +9,7 @@ function App() {
   const [newGiftImageUrl, setNewGiftImageUrl] = useState('');
   const [newGiftPrice, setNewGiftPrice] = useState('');
   const [sortOrder, setSortOrder] = useState('none'); // 'none', 'asc', 'desc'
+  const [suggestionMessage, setSuggestionMessage] = useState('');
 
   useEffect(() => {
     fetch('http://localhost:3001/api/gifts')
@@ -33,19 +34,18 @@ function App() {
     }
   };
 
-  const handleAddGift = (e) => {
+  const handleSuggestGift = (e) => {
     e.preventDefault();
     const newGift = { name: newGiftName, description: newGiftDescription, link: newGiftLink, imageUrl: newGiftImageUrl, price: parseFloat(newGiftPrice) };
-    fetch('http://localhost:3001/api/gifts', {
+    fetch('http://localhost:3001/api/suggestions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(newGift),
     })
-    .then(res => res.json())
-    .then(addedGift => {
-      setGifts([...gifts, addedGift]);
+    .then(() => {
+      setSuggestionMessage('Danke für deinen Vorschlag!');
       setNewGiftName('');
       setNewGiftDescription('');
       setNewGiftLink('');
@@ -102,8 +102,9 @@ function App() {
           ))}
         </div>
         <div className="add-gift-form">
-          <h2>Neues Geschenk hinzufügen</h2>
-          <form onSubmit={handleAddGift}>
+          <h2>Geschenk vorschlagen</h2>
+          {suggestionMessage && <p>{suggestionMessage}</p>}
+          <form onSubmit={handleSuggestGift}>
             <input
               type="text"
               placeholder="Geschenkname"
@@ -134,7 +135,7 @@ function App() {
               value={newGiftPrice}
               onChange={(e) => setNewGiftPrice(e.target.value)}
             />
-            <button type="submit">Hinzufügen</button>
+            <button type="submit">Vorschlagen</button>
           </form>
         </div>
       </main>
@@ -143,3 +144,4 @@ function App() {
 }
 
 export default App;
+
