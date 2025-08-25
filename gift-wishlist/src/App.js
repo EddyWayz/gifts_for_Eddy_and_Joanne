@@ -11,6 +11,7 @@ function App() {
   const [sortOrder, setSortOrder] = useState('none'); // 'none', 'asc', 'desc'
   const [recipientFilter, setRecipientFilter] = useState('all');
   const [newGiftRecipient, setNewGiftRecipient] = useState('eddy');
+  const [suggestionMessage, setSuggestionMessage] = useState('');
 
 
   useEffect(() => {
