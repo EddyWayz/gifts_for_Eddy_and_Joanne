@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-const API_URL = process.env.REACT_APP_API_URL;
+const API_URL = process.env.REACT_APP_API_URL || 'https://backend-gifts-for-eddy-and-joanne.onrender.com';
 
 function App() {
   const [gifts, setGifts] = useState([]);
@@ -14,11 +14,11 @@ function App() {
   const [recipientFilter, setRecipientFilter] = useState('all');
   const [newGiftRecipient, setNewGiftRecipient] = useState('eddy');
   const [suggestionMessage, setSuggestionMessage] = useState('');
+  const [error, setError] = useState(null);
 
 
   useEffect(() => {
-
-    fetch('http://localhost:3001/api/gifts')
+    fetch(`${API_URL}/api/gifts`)
       .then(res => {
         if (!res.ok) {
           throw new Error('Network response was not ok');
@@ -28,9 +28,8 @@ function App() {
       .then(data => setGifts(data))
       .catch(err => {
         console.error('Error fetching gifts:', err);
-        alert('Die Geschenke konnten nicht geladen werden. Bitte versuche es später erneut.');
+        setError('Die Geschenke konnten nicht geladen werden. Bitte versuche es später erneut.');
       });
-
   }, []);
 
   const handleReserve = (id) => {
@@ -66,12 +65,11 @@ function App() {
       description: newGiftDescription,
       link: newGiftLink,
       imageUrl: newGiftImageUrl,
-      price: parseFloat(newGiftPrice),
+      price: parseFloat(newGiftPrice) || null,
       recipient: newGiftRecipient,
     };
 
-    fetch('http://localhost:3001/api/gifts', {
-
+    fetch(`${API_URL}/api/gifts`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -82,9 +80,10 @@ function App() {
         if (!res.ok) {
           throw new Error('Network response was not ok');
         }
-        return res;
+        return res.json();
       })
-      .then(() => {
+      .then((addedGift) => {
+        setGifts([...gifts, addedGift]);
         setSuggestionMessage('Danke für deinen Vorschlag!');
         setNewGiftName('');
         setNewGiftDescription('');
@@ -130,6 +129,10 @@ function App() {
       return '$$$';
     }
   };
+
+  if (error) {
+    return <div className="App"><h1>Error: {error}</h1></div>;
+  }
 
   return (
     <div className="App">
@@ -217,4 +220,3 @@ function App() {
 }
 
 export default App;
-

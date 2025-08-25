@@ -4,7 +4,7 @@
     "name": "Ein gutes Buch",
     "description": "Ein spannender Krimi oder ein interessantes Sachbuch.",
     "link": "https://www.amazon.de/bücher",
-    "reservedBy": null,
+    "reservedBy": "Edd",
     "imageUrl": "https://images.unsplash.com/photo-1544947950-fa07a98d237f",
     "price": 20,
     "recipient": "eddy"
@@ -27,6 +27,36 @@
     "reservedBy": null,
     "imageUrl": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5",
     "price": 100,
+    "recipient": "both"
+  },
+  {
+    "id": 4,
+    "name": "dd",
+    "description": "d",
+    "link": "f",
+    "imageUrl": "",
+    "price": null,
+    "reservedBy": null,
+    "recipient": "eddy"
+  },
+  {
+    "id": 5,
+    "name": "ff",
+    "description": "ff",
+    "link": "f",
+    "imageUrl": "f",
+    "price": 1,
+    "reservedBy": null,
+    "recipient": "joanne"
+  },
+  {
+    "id": 6,
+    "name": "b",
+    "description": "",
+    "link": "",
+    "imageUrl": "",
+    "price": 1,
+    "reservedBy": null,
     "recipient": "both"
   }
 ]

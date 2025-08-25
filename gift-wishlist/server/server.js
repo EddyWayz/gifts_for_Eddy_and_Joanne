@@ -1,8 +1,8 @@
-
 const express = require('express');
 const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
+const crypto = require('crypto');
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -12,6 +12,7 @@ app.use(express.json());
 
 const giftsFilePath = path.join(__dirname, 'gifts.json');
 const suggestionsFilePath = path.join(__dirname, 'suggestions.json');
+const lockFilePath = path.join(__dirname, 'gifts.lock');
 
 const {
   validateGift,
@@ -21,6 +22,25 @@ const {
 
 const notifyAdmin = (suggestion) => {
   console.log('New gift suggestion received:', suggestion);
+};
+
+const acquireLock = async () => {
+  while (true) {
+    try {
+      await fs.open(lockFilePath, 'wx');
+      return;
+    } catch (err) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  }
+};
+
+const releaseLock = async () => {
+  try {
+    await fs.unlink(lockFilePath);
+  } catch (err) {
+    // Ignore errors
+  }
 };
 
 // Endpoint to get all gifts
@@ -35,13 +55,11 @@ app.get('/api/gifts', async (req, res) => {
 });
 
 // Endpoint to reserve a gift
-
-
-app.post('/api/gifts/:id/reserve', validateReservation, (req, res) => {
-
-  const giftId = parseInt(req.params.id, 10);
+app.post('/api/gifts/:id/reserve', validateReservation, async (req, res) => {
+  const giftId = req.params.id;
   const { name } = req.body;
 
+  await acquireLock();
   try {
     const data = await fs.readFile(giftsFilePath, 'utf8');
     let gifts = JSON.parse(data);
@@ -62,21 +80,21 @@ app.post('/api/gifts/:id/reserve', validateReservation, (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('An error occurred while processing the request.');
+  } finally {
+    await releaseLock();
   }
 });
 
 // Endpoint to add a new gift
-
-app.post('/api/gifts', validateGift, (req, res) => {
-
-
+app.post('/api/gifts', validateGift, async (req, res) => {
   const { name, description, link, imageUrl, price, recipient } = req.body;
 
+  await acquireLock();
   try {
     const data = await fs.readFile(giftsFilePath, 'utf8');
     let gifts = JSON.parse(data);
     const newGift = {
-      id: gifts.length > 0 ? Math.max(...gifts.map(g => g.id)) + 1 : 1,
+      id: crypto.randomUUID(),
       name,
       description,
       link,
@@ -92,13 +110,13 @@ app.post('/api/gifts', validateGift, (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send('An error occurred while processing the gifts file.');
+  } finally {
+    await releaseLock();
   }
 });
 
 // Endpoint to suggest a new gift
-
-app.post('/api/suggestions', validateSuggestion, (req, res) => {
-
+app.post('/api/suggestions', validateSuggestion, async (req, res) => {
   const { name, description, link, imageUrl, price } = req.body;
 
   let suggestions = [];
@@ -113,7 +131,7 @@ app.post('/api/suggestions', validateSuggestion, (req, res) => {
   }
 
   const newSuggestion = {
-    id: suggestions.length > 0 ? Math.max(...suggestions.map(s => s.id)) + 1 : 1,
+    id: crypto.randomUUID(),
     name,
     description,
     link,
@@ -136,4 +154,3 @@ app.post('/api/suggestions', validateSuggestion, (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-
