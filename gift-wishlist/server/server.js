@@ -5,7 +5,7 @@ const fs = require('fs').promises;
 const path = require('path');
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 app.use(cors());
 app.use(express.json());
@@ -35,6 +35,7 @@ app.get('/api/gifts', async (req, res) => {
 });
 
 // Endpoint to reserve a gift
+
 
 app.post('/api/gifts/:id/reserve', validateReservation, (req, res) => {
 
