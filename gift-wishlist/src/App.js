@@ -12,6 +12,7 @@ function App() {
   const [recipientFilter, setRecipientFilter] = useState('all');
   const [newGiftRecipient, setNewGiftRecipient] = useState('eddy');
 
+
   useEffect(() => {
     fetch('http://localhost:3001/api/gifts')
       .then(res => res.json())
@@ -28,14 +29,14 @@ function App() {
         },
         body: JSON.stringify({ name }),
       })
-      .then(res => res.json())
-      .then(updatedGift => {
-        setGifts(gifts.map(g => g.id === id ? updatedGift : g));
-      });
+        .then(res => res.json())
+        .then(updatedGift => {
+          setGifts(gifts.map(g => g.id === id ? updatedGift : g));
+        });
     }
   };
 
-  const handleAddGift = (e) => {
+  const handleSuggestGift = (e) => {
     e.preventDefault();
     const newGift = {
       name: newGiftName,
@@ -46,15 +47,15 @@ function App() {
       recipient: newGiftRecipient,
     };
     fetch('http://localhost:3001/api/gifts', {
+
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(newGift),
     })
-    .then(res => res.json())
-    .then(addedGift => {
-      setGifts([...gifts, addedGift]);
+    .then(() => {
+      setSuggestionMessage('Danke für deinen Vorschlag!');
       setNewGiftName('');
       setNewGiftDescription('');
       setNewGiftLink('');
@@ -62,6 +63,7 @@ function App() {
       setNewGiftPrice('');
       setNewGiftRecipient('eddy');
     });
+
   };
 
   const filteredGifts = gifts.filter(gift => {
@@ -101,6 +103,7 @@ function App() {
               <button className={recipientFilter === 'eddy' ? 'active' : ''} onClick={() => setRecipientFilter('eddy')}>Eddy</button>
               <button className={recipientFilter === 'joanne' ? 'active' : ''} onClick={() => setRecipientFilter('joanne')}>Joanne</button>
               <button className={recipientFilter === 'both' ? 'active' : ''} onClick={() => setRecipientFilter('both')}>Beide</button>
+
             </div>
             <div className="sort-controls">
               <button className={sortOrder === 'none' ? 'active' : ''} onClick={() => setSortOrder('none')}>Keine Sortierung</button>
@@ -124,8 +127,9 @@ function App() {
             ))}
         </div>
         <div className="add-gift-form">
-          <h2>Neues Geschenk hinzufügen</h2>
-          <form onSubmit={handleAddGift}>
+          <h2>Geschenk vorschlagen</h2>
+          {suggestionMessage && <p>{suggestionMessage}</p>}
+          <form onSubmit={handleSuggestGift}>
             <input
               type="text"
               placeholder="Geschenkname"
@@ -165,6 +169,7 @@ function App() {
             onChange={(e) => setNewGiftPrice(e.target.value)}
           />
             <button type="submit">Hinzufügen</button>
+
           </form>
         </div>
       </main>
@@ -173,3 +178,4 @@ function App() {
 }
 
 export default App;
+

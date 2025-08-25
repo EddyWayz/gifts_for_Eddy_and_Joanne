@@ -11,6 +11,11 @@ app.use(cors());
 app.use(express.json());
 
 const giftsFilePath = path.join(__dirname, 'gifts.json');
+const suggestionsFilePath = path.join(__dirname, 'suggestions.json');
+
+const notifyAdmin = (suggestion) => {
+  console.log('New gift suggestion received:', suggestion);
+};
 
 // Endpoint to get all gifts
 app.get('/api/gifts', (req, res) => {
@@ -87,6 +92,41 @@ app.post('/api/gifts', (req, res) => {
         return res.status(500).send('An error occurred while saving the gifts file.');
       }
       res.status(201).json(newGift);
+    });
+  });
+});
+
+// Endpoint to suggest a new gift
+app.post('/api/suggestions', (req, res) => {
+  const { name, description, link, imageUrl, price } = req.body;
+
+  fs.readFile(suggestionsFilePath, 'utf8', (err, data) => {
+    let suggestions = [];
+    if (!err) {
+      suggestions = JSON.parse(data);
+    } else if (err.code !== 'ENOENT') {
+      console.error(err);
+      return res.status(500).send('An error occurred while reading the suggestions file.');
+    }
+
+    const newSuggestion = {
+      id: suggestions.length > 0 ? Math.max(...suggestions.map(s => s.id)) + 1 : 1,
+      name,
+      description,
+      link,
+      imageUrl,
+      price
+    };
+
+    suggestions.push(newSuggestion);
+
+    fs.writeFile(suggestionsFilePath, JSON.stringify(suggestions, null, 2), (err) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).send('An error occurred while saving the suggestions file.');
+      }
+      notifyAdmin(newSuggestion);
+      res.status(202).json({ message: 'Suggestion received' });
     });
   });
 });
