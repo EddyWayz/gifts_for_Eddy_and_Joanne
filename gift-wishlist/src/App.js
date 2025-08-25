@@ -6,6 +6,7 @@ function App() {
   const [newGiftName, setNewGiftName] = useState('');
   const [newGiftDescription, setNewGiftDescription] = useState('');
   const [newGiftLink, setNewGiftLink] = useState('');
+  const [newGiftImageUrl, setNewGiftImageUrl] = useState('');
 
   useEffect(() => {
     fetch('https://backend-gifts-for-eddy-and-joanne.onrender.com/api/gifts')
@@ -32,7 +33,7 @@ function App() {
 
   const handleAddGift = (e) => {
     e.preventDefault();
-    const newGift = { name: newGiftName, description: newGiftDescription, link: newGiftLink };
+    const newGift = { name: newGiftName, description: newGiftDescription, link: newGiftLink, imageUrl: newGiftImageUrl };
     fetch('https://backend-gifts-for-eddy-and-joanne.onrender.com/api/gifts', {
       method: 'POST',
       headers: {
@@ -46,6 +47,7 @@ function App() {
       setNewGiftName('');
       setNewGiftDescription('');
       setNewGiftLink('');
+      setNewGiftImageUrl('');
     });
   };
 
@@ -59,6 +61,7 @@ function App() {
           {gifts.map(gift => (
             <div key={gift.id} className={`gift-card ${gift.reservedBy ? 'reserved' : ''}`}>
               <h2>{gift.name}</h2>
+              {gift.imageUrl && <img src={gift.imageUrl} alt={gift.name} />}
               <p>{gift.description}</p>
               {gift.link && <a href={gift.link} target="_blank" rel="noopener noreferrer">Link</a>}
               {gift.reservedBy ? (
@@ -89,6 +92,12 @@ function App() {
               placeholder="Link"
               value={newGiftLink}
               onChange={(e) => setNewGiftLink(e.target.value)}
+            />
+            <input
+              type="text"
+              placeholder="Bild-URL"
+              value={newGiftImageUrl}
+              onChange={(e) => setNewGiftImageUrl(e.target.value)}
             />
             <button type="submit">Hinzufügen</button>
           </form>
