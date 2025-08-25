@@ -13,6 +13,12 @@ app.use(express.json());
 const giftsFilePath = path.join(__dirname, 'gifts.json');
 const suggestionsFilePath = path.join(__dirname, 'suggestions.json');
 
+const {
+  validateGift,
+  validateSuggestion,
+  validateReservation
+} = require('./validationMiddleware');
+
 const notifyAdmin = (suggestion) => {
   console.log('New gift suggestion received:', suggestion);
 };
@@ -29,7 +35,9 @@ app.get('/api/gifts', async (req, res) => {
 });
 
 // Endpoint to reserve a gift
-app.post('/api/gifts/:id/reserve', async (req, res) => {
+
+app.post('/api/gifts/:id/reserve', validateReservation, (req, res) => {
+
   const giftId = parseInt(req.params.id, 10);
   const { name } = req.body;
 
@@ -57,7 +65,10 @@ app.post('/api/gifts/:id/reserve', async (req, res) => {
 });
 
 // Endpoint to add a new gift
-app.post('/api/gifts', async (req, res) => {
+
+app.post('/api/gifts', validateGift, (req, res) => {
+
+
   const { name, description, link, imageUrl, price, recipient } = req.body;
 
   try {
@@ -84,7 +95,9 @@ app.post('/api/gifts', async (req, res) => {
 });
 
 // Endpoint to suggest a new gift
-app.post('/api/suggestions', async (req, res) => {
+
+app.post('/api/suggestions', validateSuggestion, (req, res) => {
+
   const { name, description, link, imageUrl, price } = req.body;
 
   let suggestions = [];
