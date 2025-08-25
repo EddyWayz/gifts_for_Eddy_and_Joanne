@@ -6,3 +6,4 @@ test('renders header', () => {
   const header = screen.getByText(/Geschenke für Eddy und Joanne/i);
   expect(header).toBeInTheDocument();
 });
+

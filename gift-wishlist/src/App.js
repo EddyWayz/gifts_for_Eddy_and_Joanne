@@ -27,17 +27,19 @@ function App() {
         },
         body: JSON.stringify({ name }),
       })
-      .then(res => res.json())
-      .then(updatedGift => {
-        setGifts(gifts.map(g => g.id === id ? updatedGift : g));
-      });
+        .then(res => res.json())
+        .then(updatedGift => {
+          setGifts(gifts.map(g => g.id === id ? updatedGift : g));
+        });
     }
   };
 
   const handleSuggestGift = (e) => {
     e.preventDefault();
+
     const newGift = { name: newGiftName, description: newGiftDescription, link: newGiftLink, imageUrl: newGiftImageUrl, price: parseFloat(newGiftPrice) };
     fetch('http://localhost:3001/api/suggestions', {
+
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -52,6 +54,7 @@ function App() {
       setNewGiftImageUrl('');
       setNewGiftPrice('');
     });
+
   };
 
   const sortedGifts = [...gifts].sort((a, b) => {
@@ -80,7 +83,7 @@ function App() {
         <h1>Geschenke für Eddy und Joanne</h1>
       </header>
       <main>
-        <div className="gift-list">
+        <section className="gifts-section">
           <div className="sort-controls">
             <button onClick={() => setSortOrder('none')}>Keine Sortierung</button>
             <button onClick={() => setSortOrder('asc')}>Preis aufsteigend</button>
