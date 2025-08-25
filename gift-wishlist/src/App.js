@@ -97,20 +97,19 @@ function App() {
       <header className="App-header">
         <h1>Geschenke für Eddy und Joanne</h1>
       </header>
-      <main>
+        <main>
+          <div className="filter-controls">
+            <button className={recipientFilter === 'all' ? 'active' : ''} onClick={() => setRecipientFilter('all')}>Alle</button>
+            <button className={recipientFilter === 'eddy' ? 'active' : ''} onClick={() => setRecipientFilter('eddy')}>Eddy</button>
+            <button className={recipientFilter === 'joanne' ? 'active' : ''} onClick={() => setRecipientFilter('joanne')}>Joanne</button>
+            <button className={recipientFilter === 'both' ? 'active' : ''} onClick={() => setRecipientFilter('both')}>Beide</button>
+          </div>
+          <div className="sort-controls">
+            <button className={sortOrder === 'none' ? 'active' : ''} onClick={() => setSortOrder('none')}>Keine Sortierung</button>
+            <button className={sortOrder === 'asc' ? 'active' : ''} onClick={() => setSortOrder('asc')}>Preis aufsteigend</button>
+            <button className={sortOrder === 'desc' ? 'active' : ''} onClick={() => setSortOrder('desc')}>Preis absteigend</button>
+          </div>
           <div className="gift-list">
-            <div className="filter-controls">
-              <button className={recipientFilter === 'all' ? 'active' : ''} onClick={() => setRecipientFilter('all')}>Alle</button>
-              <button className={recipientFilter === 'eddy' ? 'active' : ''} onClick={() => setRecipientFilter('eddy')}>Eddy</button>
-              <button className={recipientFilter === 'joanne' ? 'active' : ''} onClick={() => setRecipientFilter('joanne')}>Joanne</button>
-              <button className={recipientFilter === 'both' ? 'active' : ''} onClick={() => setRecipientFilter('both')}>Beide</button>
-
-            </div>
-            <div className="sort-controls">
-              <button className={sortOrder === 'none' ? 'active' : ''} onClick={() => setSortOrder('none')}>Keine Sortierung</button>
-              <button className={sortOrder === 'asc' ? 'active' : ''} onClick={() => setSortOrder('asc')}>Preis aufsteigend</button>
-              <button className={sortOrder === 'desc' ? 'active' : ''} onClick={() => setSortOrder('desc')}>Preis absteigend</button>
-            </div>
             {sortedGifts.map(gift => (
               <div key={gift.id} className={`gift-card ${gift.reservedBy ? 'reserved' : ''}`}>
                 <h2>{gift.name}</h2>
@@ -126,11 +125,11 @@ function App() {
                 )}
               </div>
             ))}
-        </div>
-        <div className="add-gift-form">
-          <h2>Geschenk vorschlagen</h2>
-          {suggestionMessage && <p>{suggestionMessage}</p>}
-          <form onSubmit={handleSuggestGift}>
+          </div>
+          <div className="add-gift-form">
+            <h2>Geschenk vorschlagen</h2>
+            {suggestionMessage && <p>{suggestionMessage}</p>}
+            <form onSubmit={handleSuggestGift}>
             <input
               type="text"
               placeholder="Geschenkname"
